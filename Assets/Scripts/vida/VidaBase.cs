@@ -39,6 +39,7 @@ public float delayToKill = 0f;
         if(destroyOnKill)
         {
             Destroy(gameObject,delayToKill);
+            
         }
     }
         

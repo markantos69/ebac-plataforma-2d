@@ -11,6 +11,11 @@ public class Player : MonoBehaviour
     [Header("Pulo")]
     float pulo;
     float Jumpforce = 5;
+
+    [Header("Animacao player")]
+    public string boolRun = "Run";
+    public Animator animator;
+
     
     [Header("Velocidade")]
     [SerializeField]
@@ -20,6 +25,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     public float velocidade;
     public Vector2 friction= new Vector2(-.1f,0); //friccao
+
+
 [Header("ANIMATIONSETUP")]
 public float jumpScaley = 1.5f; // pular scale em y
 public float animationDuration = .3f;// duracao do scale
@@ -41,27 +48,58 @@ public Ease ease = Ease.OutBack;
     {
        //moveHorizontal = Input.GetAxis("Horizontal");
          //moveVertical = Input.GetAxis("Vertical");
-    if(Input.GetKey(KeyCode.LeftArrow))
+    if(Input.GetKey(KeyCode.LeftArrow)){
+    
+    
        minhafisica.velocity = new Vector2(-currentspeed,minhafisica.velocity.y)*velocidade *Time.deltaTime;
+              minhafisica.transform.localScale = new Vector3(-1,1,1);
 
-    if(Input.GetKey(KeyCode.RightArrow))
+        if(minhafisica.transform.localScale.x != -1) 
+        minhafisica.transform.DOScaleX(-1,.1f);
+                animator.SetBool(boolRun,true);
+
+    
+    }
+    else if(Input.GetKey(KeyCode.RightArrow))
+    {
        minhafisica.velocity = new Vector2(currentspeed,minhafisica.velocity.y)*velocidade *Time.deltaTime;
+       minhafisica.transform.localScale = new Vector3(1,1,1);
+       if(minhafisica.transform.localScale.x != -1)
+        minhafisica.transform.DOScaleX(1,.1f);
+    animator.SetBool(boolRun,true); //define boleana run pra true se ele apertar a rigth arrow set pra true
+    
+    }
+    else    animator.SetBool(boolRun,false);
 
     //friccao
     if(minhafisica.velocity.x > 0)
     minhafisica.velocity += friction;                   
-if(minhafisica.velocity.x < 0)
+    else if(minhafisica.velocity.x < 0)
     minhafisica.velocity -= friction;
+    
+    
 
     //correr
      if(Input.GetKey(KeyCode.LeftShift))
-        currentspeed = correr;
-        else
+     {
+             currentspeed = correr;
+            animator.speed = 1.5f;
+     }
+    
+
+     else
         {
             currentspeed= velocidade;
+            animator.speed = 1;
         }
-
     }
+
+
+    
+
+    
+
+    
 
     
    
@@ -81,11 +119,12 @@ void jump()
 
         
     }
-    void scalejump()
+    void scalejump() //pra escalar qnd pular
     {
-        minhafisica.transform.DOScaleY(jumpScaley,animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
-        minhafisica.transform.DOScaleX(jumpScalex,animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease);
+        minhafisica.transform.DOScaleY(jumpScaley,animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease); //escala em y 
+        minhafisica.transform.DOScaleX(jumpScalex,animationDuration).SetLoops(2,LoopType.Yoyo).SetEase(ease); // escala em x
 
     }
+     
 }
 
